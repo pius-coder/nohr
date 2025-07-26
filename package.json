@@ -1,0 +1,38 @@
+{
+  "name": "nohr",
+  "version": "1.0.0",
+  "description": "NOHR - Node.js + Hono + React (Unified Architecture)",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev-server.js",
+    "dev:server": "tsx watch src/server.ts",
+    "build": "pnpm run build:client && pnpm run build:server",
+    "build:client": "esbuild src/client.tsx --bundle --outfile=dist/public/client.js --format=esm --target=es2020 --platform=browser --minify --jsx=automatic --jsx-import-source=react",
+    "build:server": "node esbuild.config.js server",
+    "build:all": "node esbuild.config.js all",
+    "start": "node dist/server.js",
+    "type-check": "tsc --noEmit",
+    "clean": "rimraf dist",
+    "analyze": "node esbuild.config.js client"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.3",
+    "hono": "^4.7.11",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.7",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "chokidar": "^4.0.1",
+    "esbuild": "^0.24.2",
+    "rimraf": "^6.0.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
