@@ -5,21 +5,33 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/dev-server.js",
+    "dev:hmr": "node scripts/hmr-dev-server.js",
+    "dev:vite": "vite",
     "dev:server": "tsx watch src/server.ts",
     "build": "pnpm run build:client && pnpm run build:server",
     "build:client": "esbuild src/client.tsx --bundle --outfile=dist/public/client.js --format=esm --target=es2020 --platform=browser --minify --jsx=automatic --jsx-import-source=react",
+    "build:client:hmr": "node esbuild.hmr.config.js client-hmr",
     "build:server": "node esbuild.config.js server",
+    "build:server:hmr": "node esbuild.hmr.config.js server",
     "build:all": "node esbuild.config.js all",
+    "build:all:hmr": "node esbuild.hmr.config.js all-hmr",
     "start": "node dist/server.js",
     "type-check": "tsc --noEmit",
     "clean": "rimraf dist",
-    "analyze": "node esbuild.config.js client"
+    "analyze": "node esbuild.config.js client",
+    "demo:hmr": "node scripts/demo-hmr.js",
+    "test:hmr": "node test-hmr.js"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.3",
+    "@hono/vite-build": "^1.6.2",
+    "@hono/vite-dev-server": "^0.20.0",
+    "@types/ws": "^8.18.1",
     "hono": "^4.7.11",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "vite": "^7.0.6",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/node": "^22.10.7",

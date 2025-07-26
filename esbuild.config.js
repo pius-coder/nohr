@@ -45,7 +45,25 @@ const serverConfig = {
     '.ts': 'ts',
   },
   resolveExtensions: ['.tsx', '.ts', '.jsx', '.js'],
-  external: ['@hono/node-server'], // Garder les dépendances Node.js externes
+  external: [
+    '@hono/node-server',
+    'react',
+    'react-dom',
+    'react-dom/server',
+    // Node.js built-ins
+    'util',
+    'fs',
+    'path',
+    'url',
+    'crypto',
+    'stream',
+    'buffer',
+    'events',
+    'os',
+    'http',
+    'https',
+    'zlib',
+  ], // Garder les dépendances Node.js externes
 };
 
 // Fonction pour build le client

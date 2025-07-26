@@ -117,19 +117,8 @@ async function startDevServer() {
     // Build client with watch mode
     const ctx = await context(clientBuildConfig);
 
-    ctx.onStart(() => {
-      logBuildStatus("start", "🔨 Building client...");
-    });
-
-    ctx.onEnd((result) => {
-      const duration = Date.now();
-      if (result.errors.length > 0) {
-        logBuildStatus("error", `❌ Client build failed with ${result.errors.length} errors`);
-        result.errors.forEach(error => console.error(error));
-      } else {
-        logBuildStatus("success", `✅ Client build completed`);
-      }
-    });
+    // Note: onStart and onEnd are not available in esbuild context API
+    // We'll handle build status differently
 
     // Watch for changes
     logBuildStatus("info", "👀 Watching for file changes...");

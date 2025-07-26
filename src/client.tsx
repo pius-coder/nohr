@@ -1,6 +1,11 @@
 import { hydrateRoot, createRoot } from "react-dom/client";
 import { createElement } from "react";
 
+// Import HMR runtime for development
+import "./hmr-client";
+
+// HMR Test Comment - This should trigger a rebuild
+
 // Import direct des pages pour éviter les problèmes d'hydratation
 import HomePage from "../app/(pages)/page";
 import AboutPage from "../app/(pages)/about/page";
@@ -201,6 +206,32 @@ const hydrateApp = async () => {
     }
   }
 };
+
+// 🔥 HMR Registration for development
+if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+  // Register page components for HMR
+  if (window.__HMR_RUNTIME__) {
+    window.__HMR_RUNTIME__.accept("HomePage", () => {
+      console.log("[HMR] HomePage updated, re-hydrating...");
+      hydrateApp();
+    });
+
+    window.__HMR_RUNTIME__.accept("AboutPage", () => {
+      console.log("[HMR] AboutPage updated, re-hydrating...");
+      hydrateApp();
+    });
+
+    window.__HMR_RUNTIME__.accept("UsersPage", () => {
+      console.log("[HMR] UsersPage updated, re-hydrating...");
+      hydrateApp();
+    });
+
+    window.__HMR_RUNTIME__.accept("UserPage", () => {
+      console.log("[HMR] UserPage updated, re-hydrating...");
+      hydrateApp();
+    });
+  }
+}
 
 // 🚀 Point d'entrée principal
 if (typeof window !== "undefined") {

@@ -23,7 +23,7 @@ export default function HomePage() {
 
   return (
     <div className="container">
-      <h1>🚀 NOHR - Architectures Unifi</h1>
+      <h1>🔥 NOHR - Architecture Unifiée (HMR Test 2!)</h1>
       <p>
         sa Bienvenue dans l'architecture <strong>Node.js + Hono + React</strong>{" "}
         !
