@@ -51,8 +51,34 @@ npm install
 ### Développement
 
 ```bash
-# Démarrer le serveur de développement
+# Démarrer le serveur de développement traditionnel
 pnpm dev
+
+# 🔥 Démarrer le serveur de développement avec HMR (Hot Module Replacement)
+pnpm dev:hmr
+
+# Alternative: Utiliser Vite avec l'intégration Hono
+pnpm dev:vite
+```
+
+### 🔥 Hot Module Replacement (HMR)
+
+NOHR inclut une implémentation HMR avancée utilisant esbuild avec les vite-plugins de Hono :
+
+**Fonctionnalités HMR :**
+- ⚡ Rechargement instantané des composants React
+- 🎨 Hot reload CSS sans rechargement de page
+- 🔌 Communication WebSocket en temps réel
+- 🚨 Overlay d'erreurs visuelles
+- 📊 Builds incrémentaux ultra-rapides avec esbuild
+- 🔄 Fallback gracieux en cas d'échec
+
+**Ports utilisés :**
+- `3000` : Serveur principal NOHR
+- `3001` : Serveur de développement Vite (optionnel)
+- `3002` : WebSocket HMR
+
+Pour plus de détails, voir [HMR_IMPLEMENTATION.md](./HMR_IMPLEMENTATION.md)
 
 # Ou avec npm
 npm run dev
