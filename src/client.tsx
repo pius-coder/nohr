@@ -1,272 +1,97 @@
-import { hydrateRoot, createRoot } from "react-dom/client";
-import { createElement } from "react";
+// 🚀 NOHR Client - Simple Router-Based Hydration
+import { hydrateRoot } from "react-dom/client";
+import React from "react";
+import { matchRoute } from "./generated/routes";
+import { RouterDebug } from "./components/SimpleRouter";
 
-// Import HMR runtime for development
-import "./hmr-client";
-
-// HMR Test Comment - This should trigger a rebuild
-
-// Import direct des pages pour éviter les problèmes d'hydratation
-import HomePage from "../app/(pages)/page";
-import AboutPage from "../app/(pages)/about/page";
-import UsersPage from "../app/(pages)/users/page";
-import UserPage from "../app/(pages)/users/[id]/page";
-
-// 📊 Interface pour les métriques de performance
-interface NOHRPerformance {
-  navigationStart: number;
-  buildId: string;
-  route: string;
-  framework: string;
-  ssrRender?: number;
-  hydrationStart?: number;
-  hydrationEnd?: number;
-  firstInteraction?: number;
-}
-
-declare global {
-  interface Window {
-    __NOHR_PERFORMANCE__: NOHRPerformance;
-    gtag?: (...args: any[]) => void;
-  }
-}
-
-// 🎯 Router côté client avec métriques
-const getPageComponent = () => {
-  const path = window.location.pathname;
-
-  // Marquer la résolution de route
-  performance.mark("nohr-route-resolve-start");
-
-  let component;
-  let props = {};
-
-  // Router avec support des routes dynamiques
-  if (path === "/") {
-    component = HomePage;
-  } else if (path === "/about") {
-    component = AboutPage;
-  } else if (path === "/users") {
-    component = UsersPage;
-  } else if (path.startsWith("/users/")) {
-    // Route dynamique /users/:id
-    const id = path.split("/users/")[1];
-    if (id) {
-      component = UserPage;
-      props = { params: { id } };
-    } else {
-      console.warn(
-        `Route utilisateur invalide: ${path}, fallback vers UsersPage`
-      );
-      component = UsersPage;
-    }
-  } else {
-    console.warn(`Route non trouvée: ${path}, fallback vers HomePage`);
-    component = HomePage;
-  }
-
-  performance.mark("nohr-route-resolve-end");
-  performance.measure(
-    "NOHR-Route-Resolve",
-    "nohr-route-resolve-start",
-    "nohr-route-resolve-end"
-  );
-
-  return { component, props };
-};
-
-// 📊 Fonction pour reporter les métriques de performance
-const reportNOHRMetric = (name: string, value: number) => {
-  // Console pour développement
-  console.log(`📊 ${name}: ${value.toFixed(2)}ms`);
-
-  // Google Analytics (si disponible)
-  if (window.gtag) {
-    window.gtag("event", "timing_complete", {
-      name: name,
-      value: Math.round(value),
-    });
-  }
-
-  // Performance Observer API
-  if ("PerformanceObserver" in window) {
-    try {
-      performance.mark(`nohr-${name.toLowerCase()}`);
-    } catch (e) {
-      // Ignore les erreurs de performance
-    }
-  }
-};
-
-// 🎯 Fonction principale d'hydratation
-const hydrateApp = async () => {
+// 🎯 Simple hydration with Router component
+const hydrateApp = () => {
   performance.mark("nohr-hydration-start");
 
-  // Initialiser les métriques de performance
-  if (!window.__NOHR_PERFORMANCE__) {
-    window.__NOHR_PERFORMANCE__ = {
-      navigationStart: performance.timeOrigin,
-      buildId: "nohr-dev",
-      route: window.location.pathname,
-      framework: "NOHR",
-    };
-  }
-
-  window.__NOHR_PERFORMANCE__.hydrationStart = performance.now();
-
   try {
-    const { component: PageComponent, props } = getPageComponent();
     const rootElement = document.getElementById("root");
-
     if (!rootElement) {
-      throw new Error("Element root non trouvé pour l'hydratation");
+      throw new Error("Root element not found");
     }
 
-    // Vérifier les attributs de données pour l'hydratation
-    const isServerRendered = rootElement.dataset.serverRendered === "true";
+    console.log("[NOHR] 🔄 Starting hydration with Router...");
 
-    if (!rootElement.innerHTML.trim() || !isServerRendered) {
-      console.warn("🔄 Rendu côté client au lieu d'hydratation");
-      performance.mark("nohr-client-render-start");
+    // 🎨 CORRECTION: Hydrater seulement le contenu de la page (sans les layouts)
+    // Les layouts sont déjà rendus côté serveur dans le HTML complet
 
-      const root = createRoot(rootElement);
-      root.render(createElement(PageComponent as any, props || {}));
+    // Récupérer les données initiales du serveur
+    const dataScript = document.getElementById("__NOHR_DATA__");
+    const initialData = dataScript
+      ? JSON.parse(dataScript.textContent || "{}")
+      : {};
 
-      performance.mark("nohr-client-render-end");
-      performance.measure(
-        "NOHR-Client-Render",
-        "nohr-client-render-start",
-        "nohr-client-render-end"
-      );
+    // Trouver la route actuelle immédiatement (pas de state)
+    const pathname = window.location.pathname;
+    const match = matchRoute(pathname);
 
-      const clientRenderMeasure =
-        performance.getEntriesByName("NOHR-Client-Render")[0];
-      if (clientRenderMeasure) {
-        reportNOHRMetric("NOHR-Client-Render", clientRenderMeasure.duration);
-      }
-    } else {
-      console.log("🎉 Hydratation SSR → Client");
-
-      // Hydratation avec gestion d'erreurs
-      hydrateRoot(
-        rootElement,
-        createElement(PageComponent as any, props || {}),
-        {
-          onRecoverableError: (error) => {
-            console.warn("⚠️ Erreur récupérable lors de l'hydratation:", error);
-          },
-        }
-      );
+    if (!match) {
+      console.error("[NOHR] ❌ No route found for", pathname);
+      hydrateRoot(rootElement, <div>Route not found: {pathname}</div>);
+      return;
     }
+
+    // Créer l'élément de page avec les données du serveur
+    const PageComponent = match.route.component;
+    const pageElement = React.createElement(PageComponent, {
+      params: match.params,
+      pathname: pathname,
+      ...(initialData.data || {}),
+    });
+
+    // IMPORTANT: Hydrater seulement la page, pas les layouts
+    hydrateRoot(rootElement, pageElement);
 
     performance.mark("nohr-hydration-end");
-    performance.measure(
-      "NOHR-Hydration",
+
+    // 🔧 CORRECTION: performance.measure() retourne un objet, pas un nombre
+    const measure = performance.measure(
+      "NOHR Hydration",
       "nohr-hydration-start",
       "nohr-hydration-end"
     );
+    const hydrationTime = measure.duration;
 
-    const hydrationMeasure = performance.getEntriesByName("NOHR-Hydration")[0];
-    if (hydrationMeasure) {
-      window.__NOHR_PERFORMANCE__.hydrationEnd = performance.now();
-      reportNOHRMetric("NOHR-Hydration", hydrationMeasure.duration);
+    // Mark as hydrated
+    rootElement.classList.remove("hydrating");
+    rootElement.classList.add("hydrated");
+
+    console.log(
+      `[NOHR] ✅ Hydration completed in ${hydrationTime.toFixed(2)}ms`
+    );
+
+    // Add debug component in development
+    if (process.env.NODE_ENV === "development") {
+      const debugContainer = document.createElement("div");
+      document.body.appendChild(debugContainer);
+      hydrateRoot(debugContainer, <RouterDebug />);
     }
-
-    // Marquer la première interaction
-    const markFirstInteraction = () => {
-      if (!window.__NOHR_PERFORMANCE__.firstInteraction) {
-        window.__NOHR_PERFORMANCE__.firstInteraction = performance.now();
-        reportNOHRMetric(
-          "NOHR-First-Interaction",
-          window.__NOHR_PERFORMANCE__.firstInteraction
-        );
-      }
-    };
-
-    // Écouter les événements d'interaction
-    ["click", "keydown", "touchstart"].forEach((event) => {
-      document.addEventListener(event, markFirstInteraction, { once: true });
-    });
-
-    console.log("✅ Hydratation NOHR terminée avec succès");
   } catch (error) {
-    console.error("❌ Erreur lors de l'hydratation:", error);
+    console.error("[NOHR] ❌ Hydration failed:", error);
 
-    // Fallback : essayer un rendu client simple
-    try {
-      const { component: PageComponent, props } = getPageComponent();
-      const rootElement = document.getElementById("root");
-      if (rootElement) {
-        const root = createRoot(rootElement);
-        root.render(createElement(PageComponent as any, props || {}));
-        console.log("🔄 Fallback vers rendu client réussi");
-      }
-    } catch (fallbackError) {
-      console.error("💥 Échec du fallback:", fallbackError);
+    // Fallback: Show error message
+    const rootElement = document.getElementById("root");
+    if (rootElement) {
+      rootElement.innerHTML = `
+        <div style="padding: 2rem; text-align: center; background: #fee; border: 1px solid #fcc; border-radius: 8px; margin: 2rem;">
+          <h1>❌ Hydration Error</h1>
+          <p>Failed to initialize the NOHR application.</p>
+          <button onclick="window.location.reload()">🔄 Reload Page</button>
+        </div>
+      `;
     }
   }
 };
 
-// 🔥 HMR Registration for development
-if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
-  // Register page components for HMR
-  if (window.__HMR_RUNTIME__) {
-    window.__HMR_RUNTIME__.accept("HomePage", () => {
-      console.log("[HMR] HomePage updated, re-hydrating...");
-      hydrateApp();
-    });
-
-    window.__HMR_RUNTIME__.accept("AboutPage", () => {
-      console.log("[HMR] AboutPage updated, re-hydrating...");
-      hydrateApp();
-    });
-
-    window.__HMR_RUNTIME__.accept("UsersPage", () => {
-      console.log("[HMR] UsersPage updated, re-hydrating...");
-      hydrateApp();
-    });
-
-    window.__HMR_RUNTIME__.accept("UserPage", () => {
-      console.log("[HMR] UserPage updated, re-hydrating...");
-      hydrateApp();
-    });
-  }
+// 🚀 Initialize the application
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", hydrateApp);
+} else {
+  hydrateApp();
 }
 
-// 🚀 Point d'entrée principal
-if (typeof window !== "undefined") {
-  // Attendre que le DOM soit prêt
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", hydrateApp);
-  } else {
-    // DOM déjà prêt
-    hydrateApp();
-  }
-
-  // Gestion des erreurs globales
-  window.addEventListener("error", (event) => {
-    console.error("🚨 Erreur globale capturée:", event.error);
-  });
-
-  window.addEventListener("unhandledrejection", (event) => {
-    console.error("🚨 Promise rejetée non gérée:", event.reason);
-  });
-
-  // Afficher les métriques finales au déchargement de la page
-  window.addEventListener("beforeunload", () => {
-    const perf = window.__NOHR_PERFORMANCE__;
-    if (perf) {
-      console.log("📊 Métriques finales NOHR:", perf);
-    }
-  });
-
-  // Hot Module Replacement pour le développement (si disponible)
-  if (typeof (import.meta as any).hot !== "undefined") {
-    (import.meta as any).hot.accept(() => {
-      console.log("🔄 Hot reload détecté, rechargement...");
-      window.location.reload();
-    });
-  }
-}
-
-export default hydrateApp;
+export { hydrateApp };

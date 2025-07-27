@@ -1,210 +1,296 @@
-# 🚀 NOHR - Node.js + Hono + React
+# 🚀 NOHR Framework
 
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?logo=github)](https://github.com/USERNAME/nohr)
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19+-blue?logo=react)](https://reactjs.org/)
-[![Hono](https://img.shields.io/badge/Hono-4.7+-orange?logo=hono)](https://hono.dev/)
+> **Modern Full-Stack Framework** - Node.js + Hono + React with Server-Side Rendering
 
-**NOHR** est une architecture unifiée moderne qui combine **Node.js**, **Hono** et **React** pour créer des applications web performantes avec SSR (Server-Side Rendering) et CSR (Client-Side Rendering).
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/your-org/nohr)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/typescript-5.0+-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/react-18+-blue.svg)](https://reactjs.org/)
+[![Hono](https://img.shields.io/badge/hono-4.7+-orange.svg)](https://hono.dev/)
 
-## ✨ Fonctionnalités
+**NOHR** is a cutting-edge full-stack framework that combines the power of **Node.js**, the speed of **Hono**, and the flexibility of **React** to create high-performance web applications with native Server-Side Rendering.
 
-- ✅ **Server-Side Rendering (SSR)** avec React
-- ✅ **Client-Side Hydration** pour l'interactivité
-- ✅ **Routing** basé sur les fichiers (comme Next.js)
-- ✅ **API Routes** avec Hono
-- ✅ **TypeScript** support complet
-- ✅ **Build optimisé** avec esbuild
-- ✅ **Compression gzip** automatique
+## ✨ Key Features
 
-## 🛠️ Stack Technique
+- 🚀 **Ultra-Fast SSR** - Native server-side rendering with Hono's blazing speed
+- 📁 **File-System Routing** - Automatic routing based on file structure (Next.js-like)
+- 🎨 **Nested Layouts** - Powerful layout system with automatic nesting
+- ⚡ **Hot Reload** - Instant development feedback with `tsx watch`
+- 🔧 **API Routes** - Built-in API routing with REST conventions
+- 📦 **Modern Stack** - TypeScript, ESM, and latest tooling
+- 🎯 **Zero Config** - Works out of the box with sensible defaults
+- 🔄 **SPA Navigation** - Client-side routing without page reloads
 
-| Composant       | Technologie | Rôle                    |
-| --------------- | ----------- | ----------------------- |
-| Runtime         | Node.js 18+ | Exécution JavaScript    |
-| Serveur         | Hono        | API & SSR               |
-| Frontend        | React 19    | Interface utilisateur   |
-| Build           | esbuild     | Bundling rapide         |
-| Package Manager | pnpm        | Gestion des dépendances |
-| Types           | TypeScript  | Type safety             |
+## 🛠️ Technology Stack
 
-## 🚀 Installation
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Runtime** | Node.js 18+ | JavaScript execution |
+| **Server** | Hono | Ultra-fast web framework |
+| **Frontend** | React 18 | UI library with SSR |
+| **Build** | esbuild | Lightning-fast bundling |
+| **Dev Server** | tsx | TypeScript execution |
+| **Package Manager** | pnpm | Efficient dependency management |
 
-### Prérequis
+## 🚀 Quick Start
 
-- Node.js 18+
-- pnpm (recommandé) ou npm
+### Prerequisites
+- Node.js 18 or higher
+- pnpm (recommended) or npm
 
-### Installation des dépendances
+### Installation
 
 ```bash
-# Avec pnpm (recommandé)
+# Clone the repository
+git clone https://github.com/your-org/nohr.git
+cd nohr
+
+# Install dependencies
 pnpm install
 
-# Ou avec npm
-npm install
-```
+# Generate routes
+pnpm generate
 
-## 🎯 Utilisation
-
-### Développement
-
-```bash
-# Démarrer le serveur de développement traditionnel
+# Start development server
 pnpm dev
-
-# 🔥 Démarrer le serveur de développement avec HMR (Hot Module Replacement)
-pnpm dev:hmr
-
-# Alternative: Utiliser Vite avec l'intégration Hono
-pnpm dev:vite
 ```
 
-### 🔥 Hot Module Replacement (HMR)
+🎉 Your app is now running at **http://localhost:3000**
 
-NOHR inclut une implémentation HMR avancée utilisant esbuild avec les vite-plugins de Hono :
-
-**Fonctionnalités HMR :**
-- ⚡ Rechargement instantané des composants React
-- 🎨 Hot reload CSS sans rechargement de page
-- 🔌 Communication WebSocket en temps réel
-- 🚨 Overlay d'erreurs visuelles
-- 📊 Builds incrémentaux ultra-rapides avec esbuild
-- 🔄 Fallback gracieux en cas d'échec
-
-**Ports utilisés :**
-- `3000` : Serveur principal NOHR
-- `3001` : Serveur de développement Vite (optionnel)
-- `3002` : WebSocket HMR
-
-Pour plus de détails, voir [HMR_IMPLEMENTATION.md](./HMR_IMPLEMENTATION.md)
-
-# Ou avec npm
-npm run dev
-```
-
-Le serveur sera disponible sur `http://localhost:3000`
-
-### Production
-
-```bash
-# Build pour la production
-pnpm build
-
-# Démarrer en production
-pnpm start
-```
-
-### Scripts disponibles
-
-- `pnpm dev` - Serveur de développement avec watch
-- `pnpm build` - Build client + serveur
-- `pnpm start` - Démarrer en production
-- `pnpm type-check` - Vérification TypeScript
-- `pnpm clean` - Nettoyer le dossier dist
-
-## 📁 Structure du projet
+## 📁 Project Structure
 
 ```
 nohr/
-├── app/                    # Application
-│   ├── (pages)/           # Pages React avec file-based routing
-│   │   ├── page.tsx       # Page d'accueil (/)
-│   │   ├── about/         # Page à propos (/about)
-│   │   └── users/         # Pages utilisateurs (/users)
-│   └── api/               # API Routes
-│       ├── hello/         # API Hello (/api/hello)
-│       └── users/         # API Users (/api/users)
-├── src/                   # Code source
-│   ├── server.ts          # Serveur Hono avec SSR
-│   └── client.tsx         # Client React avec hydratation
-├── dist/                  # Build output
-└── package.json
+├── app/
+│   ├── (pages)/                 # 📄 Web pages with automatic routing
+│   │   ├── layout.tsx          # Root layout (applied to all pages)
+│   │   ├── page.tsx            # Home page "/"
+│   │   ├── about/
+│   │   │   └── page.tsx        # About page "/about"
+│   │   ├── dashboard/
+│   │   │   ├── layout.tsx      # Dashboard layout
+│   │   │   └── page.tsx        # Dashboard page "/dashboard"
+│   │   └── users/
+│   │       ├── page.tsx        # Users page "/users"
+│   │       └── [id]/
+│   │           └── page.tsx    # Dynamic page "/users/:id"
+│   └── api/                     # 🔌 API routes
+│       ├── users/
+│       │   └── route.ts        # API "/api/users"
+│       └── products/
+│           ├── route.ts        # API "/api/products"
+│           └── [id]/
+│               └── route.ts    # API "/api/products/:id"
+├── src/
+│   ├── components/             # 🧩 Reusable React components
+│   ├── generated/              # 🤖 Auto-generated code (do not edit)
+│   ├── client.tsx              # Client-side entry point
+│   └── server.ts               # Hono server with SSR
+├── public/                     # 📁 Static assets
+├── dist/                       # 📦 Production build
+└── scripts/                    # 🔧 Build and generation scripts
 ```
 
-## 🌐 Routes disponibles
+## 📖 Available Scripts
 
-### Pages
+```bash
+# Development
+pnpm dev                    # Start development server with hot reload
+pnpm generate              # Generate all routes (pages + API)
+pnpm generate-routes       # Generate page routes only
+pnpm generate-api-routes   # Generate API routes only
 
-- `/` - Page d'accueil
-- `/about` - À propos de NOHR
-- `/users` - Liste des utilisateurs
-- `/users/:id` - Détail d'un utilisateur
+# Production
+pnpm build                 # Build for production
+pnpm build:client         # Build client bundle only
+pnpm start                # Start production server
 
-### API
+# Utilities
+pnpm clean                # Clean build artifacts
+pnpm type-check          # Run TypeScript type checking
+```
 
-- `GET /api/hello` - API de test
-- `POST /api/hello` - Test POST
-- `GET /api/hello/health` - Health check
-- `GET /api/users` - Liste des utilisateurs
-- `POST /api/users` - Créer un utilisateur
-- `GET /api/users/:id` - Détail d'un utilisateur
-- `PUT /api/users/:id` - Modifier un utilisateur
-- `DELETE /api/users/:id` - Supprimer un utilisateur
+## 🎯 Usage Guide
 
-## 🎮 Fonctionnalités de démonstration
+### Creating Pages
 
-1. **SSR + Hydratation** - Les pages sont rendues côté serveur puis hydratées côté client
-2. **API intégrées** - Appels API depuis les composants React
-3. **Routing dynamique** - Routes avec paramètres (`/users/:id`)
-4. **Gestion d'état** - State management avec React hooks
-5. **Performance** - Métriques temps réel dans la console
+Create a file `app/(pages)/my-page/page.tsx`:
 
-## 📊 Performance
+```tsx
+// Simple page
+export default function MyPage() {
+  return (
+    <div>
+      <h1>My New Page</h1>
+      <p>This page is automatically available at /my-page</p>
+    </div>
+  );
+}
 
-NOHR est optimisé pour la performance :
+// Page with server-side data loading
+export default function UserPage({ user, params }) {
+  return (
+    <div>
+      <h1>User: {user.name}</h1>
+      <p>Email: {user.email}</p>
+    </div>
+  );
+}
 
-- **Bundle size** : ~0.3MB
-- **Hydratation** : ~60ms
-- **SSR render** : ~20ms
-- **Compression** : Gzip automatique
-- **Cache** : Headers optimisés
+export async function loadData({ params }) {
+  const user = await fetchUser(params.id);
+  return { user };
+}
 
-## 🔧 Configuration
+// SEO metadata
+export const metadata = {
+  title: 'User Profile',
+  description: 'View user profile information'
+};
+```
 
-### TypeScript
+### Creating API Routes
 
-Le projet utilise TypeScript avec une configuration stricte. Voir `tsconfig.json`.
+Create a file `app/api/my-api/route.ts`:
 
-### Build
+```typescript
+import { Context } from 'hono';
 
-esbuild est utilisé pour un bundling ultra-rapide :
+// GET /api/my-api
+export async function GET(c: Context) {
+  const data = await fetchData();
+  return c.json({ success: true, data });
+}
 
-- **Client** : Bundle ESM pour le navigateur
-- **Serveur** : Bundle Node.js optimisé
+// POST /api/my-api
+export async function POST(c: Context) {
+  const body = await c.req.json();
+  const result = await createItem(body);
+  return c.json({ success: true, result }, 201);
+}
+```
 
-### Développement
+### Creating Layouts
 
-Le serveur de développement utilise `tsx` avec watch mode pour un rechargement automatique.
+Create a file `app/(pages)/dashboard/layout.tsx`:
 
-## 🚀 Déploiement
+```tsx
+export default function DashboardLayout({ children }) {
+  return (
+    <div className="dashboard">
+      <aside className="sidebar">
+        <nav>Dashboard Navigation</nav>
+      </aside>
+      <main className="content">
+        {children}
+      </main>
+    </div>
+  );
+}
+```
 
-NOHR peut être déployé sur n'importe quelle plateforme supportant Node.js :
+### Navigation
 
-- Vercel
-- Netlify
-- Railway
-- Render
-- VPS avec PM2
+Use the `Link` component for client-side navigation:
 
-## 🤝 Comparaison avec BHR
+```tsx
+import { Link } from '@/src/components/Link';
 
-| Aspect          | BHR (Bun)    | NOHR (Node.js) |
-| --------------- | ------------ | -------------- |
-| Runtime         | Bun          | Node.js        |
-| Package Manager | Bun          | pnpm           |
-| Performance     | Ultra-rapide | Très rapide    |
-| Compatibilité   | Récent       | Mature         |
-| Écosystème      | Émergent     | Établi         |
+export default function Navigation() {
+  return (
+    <nav>
+      <Link to="/">Home</Link>
+      <Link to="/about">About</Link>
+      <Link to="/dashboard" prefetch>Dashboard</Link>
+      <Link to="/users">Users</Link>
+    </nav>
+  );
+}
+```
 
-## 📝 Licence
+## 🎨 Advanced Features
 
-MIT
+### Dynamic Routes
+- `[id]` in folder names creates dynamic segments
+- Access parameters via `params.id` in components and `loadData`
 
-## 🙏 Remerciements
+### Nested Layouts
+- Layouts automatically nest based on file structure
+- Root layout applies to all pages
+- Specific layouts apply to their directory and subdirectories
 
-- [Hono](https://hono.dev) - Framework web ultra-rapide
-- [React](https://react.dev) - Bibliothèque UI
-- [esbuild](https://esbuild.github.io) - Bundler rapide
-- [TypeScript](https://typescriptlang.org) - Type safety
+### Server-Side Data Loading
+- Use `loadData` function for server-side data fetching
+- Data is automatically passed as props to your component
+- Supports async operations and database queries
+
+### Client vs Server Components
+- All components are server-rendered by default
+- Use `"use client"` directive for interactive components
+- Server components can import and render client components
+
+## 📊 Performance & Optimization
+
+NOHR is built for performance:
+
+- **🚀 Fast SSR** - Server-side rendering with Hono's speed
+- **⚡ Minimal Hydration** - Only interactive components are hydrated
+- **📦 Code Splitting** - Automatic code splitting per route
+- **🔄 Smart Caching** - Intelligent caching strategies
+- **📱 Core Web Vitals** - Optimized for Google's performance metrics
+
+## 🧪 Testing
+
+```bash
+# Run tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run tests with coverage
+pnpm test:coverage
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Setup
+
+```bash
+# Fork and clone the repo
+git clone https://github.com/your-username/nohr.git
+cd nohr
+
+# Install dependencies
+pnpm install
+
+# Start development
+pnpm dev
+
+# Run tests
+pnpm test
+```
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Hono](https://hono.dev/) - Ultra-fast web framework
+- [React](https://react.dev/) - UI library
+- [esbuild](https://esbuild.github.io/) - Fast bundler
+- [TypeScript](https://www.typescriptlang.org/) - Type safety
+
+---
+
+<div align="center">
+
+**Built with ❤️ by the NOHR Team**
+
+[Website](https://nohr.dev) • [Documentation](https://docs.nohr.dev) • [Examples](https://github.com/nohr-framework/examples)
+
+</div>

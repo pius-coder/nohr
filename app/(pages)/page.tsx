@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "../../src/components/Link";
 
 export default function HomePage() {
   const [count, setCount] = useState(0);
@@ -108,8 +109,8 @@ export default function HomePage() {
       <div style={{ marginBottom: "20px" }}>
         <h2>🔗 Navigation</h2>
         <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
-          <a
-            href="/about"
+          <Link
+            to="/about"
             style={{
               color: "#007acc",
               textDecoration: "none",
@@ -117,9 +118,9 @@ export default function HomePage() {
             }}
           >
             → Page À propos
-          </a>
-          <a
-            href="/users"
+          </Link>
+          <Link
+            to="/users"
             style={{
               color: "#28a745",
               textDecoration: "none",
@@ -127,9 +128,9 @@ export default function HomePage() {
             }}
           >
             → Gestion Utilisateurs
-          </a>
-          <a
-            href="/users/123"
+          </Link>
+          <Link
+            to="/users/123"
             style={{
               color: "#dc3545",
               textDecoration: "none",
@@ -137,7 +138,7 @@ export default function HomePage() {
             }}
           >
             → Utilisateur #123
-          </a>
+          </Link>
         </div>
       </div>
 
